@@ -1,5 +1,6 @@
 import * as Yup from 'yup';
 import Payment from '../models/Payment';
+import getPaymentCheckoutUrl from '../utils/stripe';
 
 class PaymentsController {
   async create(req, res) {
@@ -22,7 +23,18 @@ class PaymentsController {
       conversationSid,
     } = await Payment.create(req.body);
 
-    return res.json({ id, amount, description, currency, conversationSid });
+    const url = await getPaymentCheckoutUrl(amount, description, currency, id);
+
+    await Payment.findOneAndUpdate({ _id: id }, { url });
+
+    return res.json({
+      id,
+      amount,
+      description,
+      currency,
+      conversationSid,
+      url,
+    });
   }
 
   async index(_req, res) {
