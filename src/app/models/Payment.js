@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const PaymentSchema = new mongoose.Schema({
   status: {
     type: String,
-    enum: ['pending', 'confirmed'],
+    enum: ['pending', 'paid'],
     default: 'pending',
   },
   amount: Number,
@@ -11,7 +11,7 @@ const PaymentSchema = new mongoose.Schema({
   description: String,
   conversationSid: String,
   url: String,
-  stripeId: String,
+  stripeSessionId: String,
 });
 
 module.exports = mongoose.model('Payment', PaymentSchema);
