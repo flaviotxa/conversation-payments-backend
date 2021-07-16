@@ -5,8 +5,10 @@ class ConfigurationsController {
   async store(req, res) {
     const schema = Yup.object().shape({
       provider: Yup.string().required(),
-      providerAccountSid: Yup.string().required(),
-      providerToken: Yup.string().required(),
+      providerKey: Yup.string().required(),
+      providerSecretKey: Yup.string().required(),
+      successUrl: Yup.string().required(),
+      cancelUrl: Yup.string().required(),
     });
 
     if (!(await schema.isValid(req.body))) {
@@ -16,15 +18,19 @@ class ConfigurationsController {
     const {
       id,
       provider,
-      providerAccountSid,
-      providerToken,
+      providerKey,
+      providerSecretKey,
+      successUrl,
+      cancelUrl,
     } = await Configuration.create(req.body);
 
     return res.json({
       id,
       provider,
-      providerAccountSid,
-      providerToken,
+      providerKey,
+      providerSecretKey,
+      successUrl,
+      cancelUrl,
     });
   }
 
