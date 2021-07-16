@@ -23,9 +23,14 @@ class PaymentsController {
       conversationSid,
     } = await Payment.create(req.body);
 
-    const url = await getPaymentCheckoutUrl(amount, description, currency, id);
+    const { id: stripeSessionId, url } = await getPaymentCheckoutUrl(
+      amount,
+      description,
+      currency,
+      id
+    );
 
-    await Payment.findOneAndUpdate({ _id: id }, { url });
+    await Payment.findOneAndUpdate({ _id: id }, { url, stripeSessionId });
 
     return res.json({
       id,

@@ -28,8 +28,5 @@ export default async (
     client_reference_id,
   });
 
-  // eslint-disable-next-line no-console
-  console.log(session);
-
-  return session.url;
+  return session;
 };
