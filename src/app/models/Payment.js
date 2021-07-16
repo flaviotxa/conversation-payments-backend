@@ -10,6 +10,7 @@ const PaymentSchema = new mongoose.Schema({
   currency: String,
   description: String,
   conversationSid: String,
+  url: String,
 });
 
 module.exports = mongoose.model('Payment', PaymentSchema);
