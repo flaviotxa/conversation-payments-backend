@@ -11,6 +11,7 @@ const PaymentSchema = new mongoose.Schema({
   description: String,
   conversationSid: String,
   url: String,
+  stripeId: String,
 });
 
 module.exports = mongoose.model('Payment', PaymentSchema);
