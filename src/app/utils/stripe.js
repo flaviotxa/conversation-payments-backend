@@ -1,6 +1,6 @@
-require('dotenv').config();
+import Configuration from '../models/Configuration';
 
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Stripe = require('stripe');
 
 export default async (
   unit_amount,
@@ -8,6 +8,15 @@ export default async (
   currency,
   client_reference_id
 ) => {
+  const {
+    providerSecretKey,
+    successUrl,
+    cancelUrl,
+  } = await Configuration.findOne({
+    provider: 'stripe',
+  });
+
+  const stripe = Stripe(providerSecretKey);
   const session = await stripe.checkout.sessions.create({
     payment_method_types: ['card'],
     line_items: [
@@ -23,8 +32,8 @@ export default async (
       },
     ],
     mode: 'payment',
-    success_url: `${process.env.SUCCESS_URL}?session_id={CHECKOUT_SESSION_ID}`,
-    cancel_url: `${process.env.CANCEL_URL}?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${successUrl}?session_id={CHECKOUT_SESSION_ID}`,
+    cancel_url: `${cancelUrl}?session_id={CHECKOUT_SESSION_ID}`,
     client_reference_id,
   });
 

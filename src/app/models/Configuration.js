@@ -6,8 +6,10 @@ const ConfigurationSchema = new mongoose.Schema({
     enum: ['stripe', 'applepay'],
     default: 'stripe',
   },
-  providerAccountSid: String,
-  providerToken: String,
+  providerKey: String,
+  providerSecretKey: String,
+  successUrl: String,
+  cancelUrl: String,
 });
 
 module.exports = mongoose.model('Configuration', ConfigurationSchema);
