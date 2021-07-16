@@ -9,6 +9,8 @@ routes.post('/banana', (req, res) => {
 });
 
 routes.post('/payments', PaymentsController.create);
+routes.get('/payments', PaymentsController.index);
+routes.get('/payments/:id', PaymentsController.single);
 
 routes.post('/configurations', ConfigurationsController.store);
 routes.get('/configurations', ConfigurationsController.index);

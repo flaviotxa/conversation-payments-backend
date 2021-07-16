@@ -24,6 +24,30 @@ class PaymentsController {
 
     return res.json({ id, amount, description, currency, conversationSid });
   }
+
+  async index(_req, res) {
+    const payments = await Payment.find({});
+
+    return res.json(payments);
+  }
+
+  async single(req, res) {
+    const { id } = req.params;
+
+    let payment;
+
+    try {
+      payment = await Payment.findOne({ _id: id });
+    } catch (e) {
+      return res.status(404).json({ error: 'Payment not found.' });
+    }
+
+    if (!payment) {
+      return res.status(404).json({ error: 'Payment not found.' });
+    }
+
+    return res.json(payment);
+  }
 }
 
 export default new PaymentsController();
