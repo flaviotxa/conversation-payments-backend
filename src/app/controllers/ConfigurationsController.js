@@ -37,10 +37,15 @@ class ConfigurationsController {
   async single(req, res) {
     const { id } = req.params;
 
-    const configuration = await Configuration.findOne({ _id: id });
+    let configuration;
 
+    try {
+      configuration = await Configuration.findOne({ _id: id });
+    } catch (e) {
+      return res.status(404).json({ error: 'Configuration not found.' });
+    }
     if (!configuration) {
-      return res.status(404).json({ error: 'Form not found.' });
+      return res.status(404).json({ error: 'Configuration not found.' });
     }
 
     return res.json(configuration);
