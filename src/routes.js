@@ -20,4 +20,8 @@ routes.delete('/configurations/:id', ConfigurationsController.delete);
 
 routes.post('/webhook', WebhookController.create);
 
+routes.get('/success_page', (req, res) => {
+  res.sendFile(`${__dirname}/success_page.html`);
+});
+
 export default routes;

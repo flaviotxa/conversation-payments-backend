@@ -38,7 +38,11 @@ class PaymentsController {
       id
     );
 
-    await Payment.findOneAndUpdate({ _id: id }, { url, stripeSessionId });
+    const payment = await Payment.findOneAndUpdate(
+      { _id: id },
+      { url, stripeSessionId },
+      { new: true }
+    );
 
     async function getShortUrl(u) {
       const response = await bitly.shorten(u);
@@ -54,6 +58,14 @@ class PaymentsController {
         100}€ regarding ${description.toUpperCase()}: ${shortUrl}`
     );
 
+    req.app.io.emit('paymentCreated', {
+      _id: payment.id,
+      description: payment.description,
+      status: payment.status,
+      amount: payment.amount / 100,
+      currency: payment.currency,
+    });
+
     return res.json({
       id,
       amount,
@@ -64,10 +76,13 @@ class PaymentsController {
     });
   }
 
-  async index(_req, res) {
-    const payments = await Payment.find({});
+  async index(req, res) {
+    const { conversationSid } = req.query;
+    const payments = await Payment.find({ conversationSid });
 
-    return res.json(payments);
+    return res.json(
+      payments.map(p => Object.assign(p, { amount: p.amount / 100 }))
+    );
   }
 
   async single(req, res) {
