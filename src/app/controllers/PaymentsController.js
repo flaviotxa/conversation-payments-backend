@@ -1,6 +1,14 @@
 import * as Yup from 'yup';
+import { BitlyClient } from 'bitly';
 import Payment from '../models/Payment';
 import getPaymentCheckoutUrl from '../utils/stripe';
+import sendTwilioMessage from '../utils/twilio';
+
+require('dotenv').config();
+
+console.log(process.env.BITLY_TOKEN);
+
+const bitly = new BitlyClient(process.env.BITLY_TOKEN);
 
 class PaymentsController {
   async create(req, res) {
@@ -31,6 +39,20 @@ class PaymentsController {
     );
 
     await Payment.findOneAndUpdate({ _id: id }, { url, stripeSessionId });
+
+    async function getShortUrl(u) {
+      const response = await bitly.shorten(u);
+      console.log(`Your shortened bitlink is ${response.link}`);
+      return response.link;
+    }
+
+    const shortUrl = await getShortUrl(url);
+
+    await sendTwilioMessage(
+      conversationSid,
+      `Dear Customer, please access the following link to complete your payment of ${amount /
+        100}€ regarding ${description.toUpperCase()}: ${shortUrl}`
+    );
 
     return res.json({
       id,
