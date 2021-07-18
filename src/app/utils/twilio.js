@@ -6,17 +6,15 @@ const authToken = process.env.TWILIO_AUTH_TOKEN;
 
 const client = new Twilio(accountSid, authToken);
 
-export const sendMessage = (
+export default async (
   conversationSid,
   body,
   attributes = {},
   author = undefined
 ) => {
-  client.conversations
+  await client.conversations
     .conversations(conversationSid)
     .messages.create({ author, body, attributes: JSON.stringify(attributes) })
     .then(message => console.log('Message sent: ', message))
     .catch(error => console.error(error));
 };
-
-export default client;
