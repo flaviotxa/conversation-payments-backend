@@ -55,7 +55,7 @@ class PaymentsController {
     await sendTwilioMessage(
       conversationSid,
       `Dear Customer, please access the following link to complete your payment of ${amount /
-        100}€ regarding ${description.toUpperCase()}: ${shortUrl}`
+        100}$ regarding ${description.toUpperCase()}: ${shortUrl}`
     );
 
     req.app.io.emit('paymentCreated', {

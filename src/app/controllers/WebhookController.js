@@ -21,7 +21,7 @@ class WebhookController {
           await sendTwilioMessage(
             payment.conversationSid,
             `Dear Customer, your payment of ${payment.amount /
-              100}€ regarding ${payment.description.toUpperCase()} has been successfully paid`
+              100}$ regarding ${payment.description.toUpperCase()} has been successfully paid`
           );
 
           req.app.io.emit('paymentUpdated', payment);
